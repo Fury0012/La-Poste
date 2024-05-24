@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Poste'; /*a name to be used later*/
+  src: url('../src/assets/Adobe\ Gothic\ Std\ B.otf'); /*URL to font*/
+}
+
+*{
+  padding: 0;
+  margin: 0;
+}
+
+.ul-nav{
+  font-family: 'Poste';
+}
+
+.services{
+  font-family: 'Poste';
+}
+
