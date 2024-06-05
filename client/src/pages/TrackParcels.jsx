@@ -18,12 +18,15 @@ const TrackParcels = () => {
           setParcels(data)
         } catch (err) {
           // Handle error
+          console.error(err);
         }
       }
     }
 
     if (user) {
       getColis();
+      const intervalId = setInterval(getColis, 5000);
+      return () => clearInterval(intervalId);
     }
 
   }, [user])
