@@ -26,8 +26,4 @@ public class Tarification {
     Date date_debut;
     Date date_fin;
 
-
-    @OneToMany
-    private List<Colis> colis;
-
 }

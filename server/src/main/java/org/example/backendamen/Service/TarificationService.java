@@ -2,6 +2,7 @@ package org.example.backendamen.Service;
 
 import org.example.backendamen.Entities.Tarification;
 
+import java.util.Date;
 import java.util.List;
 
 public interface TarificationService {
@@ -10,5 +11,6 @@ public interface TarificationService {
     Tarification getTarificationById(long id);
     void deleteTarification(long id);
     List<Tarification> getAllTarification();
+    Tarification findApplicableTarification(Date date);
 
 }

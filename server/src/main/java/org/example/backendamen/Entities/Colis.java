@@ -1,9 +1,6 @@
 package org.example.backendamen.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -24,4 +21,19 @@ public class Colis {
     float taille;
     String adresseDestination;
     String status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    @ManyToOne
+    @JoinColumn(name = "tarification_id")
+    Tarification tarification;
+
+
+    @ManyToOne
+    @JoinColumn(name = "reglement_id")
+    Reglement reglement;
+
 }

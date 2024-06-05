@@ -9,7 +9,7 @@ const CreateColis = () => {
     const [poids, setPoids] = useState('');
     const [taille, setTaille] = useState('');
     const [adresseDestination, setAdresseDestination] = useState('');
-    const { user } = PosteState()
+    const { user, setcolisId, colisId } = PosteState()
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -18,16 +18,21 @@ const CreateColis = () => {
             contenu,
             poids,
             taille,
-            adresseDestination
+            adresseDestination,
+            status: "en depot"
+            
         };
 
         try {
-            const { data } = await axios.post('http://localhost:8090/api/Colis/create', formData, {
+            const { data } = await axios.post(`http://localhost:8090/api/Colis/create?userId=${user?.user?.id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${user?.token}`
                 }
             });
             console.log(data);
+            setcolisId(data.id)
+
+
             // Handle successful response
             toast.success('Colis created successfully!');
         } catch (err) {

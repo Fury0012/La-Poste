@@ -2,6 +2,7 @@ package org.example.backendamen.Service.Impl;
 
 
 import lombok.RequiredArgsConstructor;
+import org.example.backendamen.Entities.Colis;
 import org.example.backendamen.Entities.Response.UserRequest;
 import org.example.backendamen.Entities.Response.UserResponse;
 import org.example.backendamen.Entities.Role;
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+
     @Override
     public User getUserById(long userId) {
         return userRepository.findById(userId).orElseThrow();
@@ -83,5 +85,10 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .telephone(user.getTelephone())
                 .build();
+    }
+
+    @Override
+    public List<Colis> findColisByUser(Long id){
+        return userRepository.findColisByUser(id);
     }
 }

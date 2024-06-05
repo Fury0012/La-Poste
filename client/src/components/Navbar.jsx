@@ -14,6 +14,7 @@ const Navbar = () => {
     const handleLogout = () => {
         localStorage.removeItem("userInfo");
         navigate("/");
+        window.location.reload()
     };
 
     // Function to render navbar items based on user role

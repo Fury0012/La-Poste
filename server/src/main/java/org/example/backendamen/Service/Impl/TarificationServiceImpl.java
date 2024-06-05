@@ -6,6 +6,7 @@ import org.example.backendamen.Service.TarificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,5 +47,10 @@ public class TarificationServiceImpl implements TarificationService {
     @Override
     public void deleteTarification(long id) {
         tarificationRepository.deleteById(id);
+    }
+
+    @Override
+    public Tarification findApplicableTarification(Date date) {
+        return  tarificationRepository.findApplicableTarification(date);
     }
 }

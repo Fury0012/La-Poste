@@ -31,6 +31,9 @@ public class User implements UserDetails {
     Role role;
     Boolean status;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    List<Colis> colis;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

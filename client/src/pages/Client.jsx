@@ -7,7 +7,7 @@ const Client = () => {
     return (
         <div className='min-h-screen bg-[#0E1959] text-[#0E1959] flex justify-center items-center'>
             <div className='bg-white shadow-md rounded-lg p-16 w-full md:w-3/4 lg:w-1/2'>
-                <h1 className='text-2   xl font-bold mb-4'>Client:</h1>
+                <h1 className='text-2   xl font-bold mb-4'> {user?.user?.role}:</h1>
                 <div className='grid grid-cols-2 gap-4'>
                     <div>
                         <p className='font-bold'>First Name:</p>

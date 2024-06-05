@@ -9,5 +9,6 @@ public interface ColisService {
     Colis updateColis(long id, Colis colis);
     Colis getColisById(long id);
     List<Colis> getAllColis();
+    List<Colis> getAllColisForUser(long userId);
     void deleteColis(long id);
 }

@@ -1,34 +1,86 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { PosteState } from '../config/PosteProvider';
 
 const RecordPayment = () => {
-  const { user } = PosteState();
+  const { user, colisId } = PosteState();
+  const [montant, setmontant] = useState(0)
   const [formData, setFormData] = useState({
     mode_reglement: '',
     numero_carte: '',
-    montant: 0,
+    montant: montant,
     date_paiement: new Date().toISOString().slice(0, 10), // Default to today's date in 'YYYY-MM-DD' format
   });
+
+
+  useEffect(() => {
+    const getMontant = async () => {
+      try {
+        console.log('Request data:', { colisId }); // Log the data being sent
+        const { data } = await axios.post(
+          'http://localhost:8090/api/paiement/calculerMontant',
+          { colisId },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        setmontant(data.montant)
+        // Do something with the response data if needed
+      } catch (error) {
+        console.error('Error fetching montant:', error);
+      }
+    };
+
+
+
+    if (colisId && user) {
+      getMontant();
+    }
+  }, [colisId, user]);
+
+  useEffect(() => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      montant: montant,
+      mode_reglement: "cheque bancaire"
+    }));
+  }, [montant]);
+
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: name === 'montant_paye' ? parseFloat(value) : value });
   };
 
+
   const handleSubmit = async (e) => {
+    console.log(formData.mode_reglement)
     e.preventDefault();
-    console.log(formData)
     try {
-      const response = await axios.post('http://localhost:8090/api/Reglement/create', formData, {
-        headers: {
-          'Authorization': `Bearer ${user.token}`,
+      const response = await axios.post(
+        'http://localhost:8090/api/paiement/process',
+        {
+          colisId: colisId,
+          numCarte: formData.numero_carte,
+          modeReglement: formData.mode_reglement,
+          datePaiement: formData.date_paiement,
+          montant: formData.montant,
+          validNumCarte: formData.validNumCarte,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       toast.success('Payment Saved Successfully!', {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -38,7 +90,7 @@ const RecordPayment = () => {
       });
     } catch (err) {
       toast.error('An error occurred when saving your payment.', {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -65,10 +117,7 @@ const RecordPayment = () => {
               onChange={handleChange}
               className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'>
               <option value='' disabled>Select payment mode</option>
-              <option value='credit_card'>Credit Card</option>
-              <option value='debit_card'>Debit Card</option>
-              <option value='cash'>Cash</option>
-              <option value='bank_transfer'>Bank Transfer</option>
+              <option value='cheque bancaire'>Cheque bancaire</option>
             </select>
           </div>
           <div>
@@ -93,7 +142,8 @@ const RecordPayment = () => {
               type='number'
               id='montant_paye'
               name='montant'
-              value={formData.montant_paye}
+              value={montant}
+              disabled
               onChange={handleChange}
               className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
               placeholder='Enter amount paid'

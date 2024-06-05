@@ -28,10 +28,7 @@ const Signup = () => {
         password,
         telephone
       });
-      // Handle the successful signup response here
-      setUser(response.data)
-      localStorage.setItem("userInfo", JSON.stringify(response.data));
-      navigate('/client-area')
+      navigate('/login')
     } catch (error) {
       setError('Signup failed. Please check your inputs and try again.');
       // Handle the failed signup response here

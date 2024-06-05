@@ -23,8 +23,7 @@ public class Reglement {
     String mode_reglement;
     Date date_paiement;
 
-    @OneToMany
-    private List<Colis> colis;
+
 
     @ManyToOne
     private Facture facture;

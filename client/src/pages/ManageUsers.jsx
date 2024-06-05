@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { PosteState } from '../config/PosteProvider';
 import EditUserModal from '../components/EditUserModal';
+import CreateUserModal from '../components/CreateUserModal';
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+  const [creatingUser, setCreatingUser] = useState(false); // New state for creating user modal
   const { user } = PosteState();
 
   useEffect(() => {
@@ -65,9 +67,32 @@ const ManageUsers = () => {
     setEditingUser(null); // Close the modal
   };
 
+  const handleCreate = () => {
+    setCreatingUser(true); // Open the create user modal
+  };
+
+  const handleSaveCreate = async (newUser) => {
+    try {
+      const { data } = await axios.post('http://localhost:8090/api/v1/user/create', newUser, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      setUsers([...users, data]); // Add the new user to the state
+      setCreatingUser(false); // Close the modal
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleCancelCreate = () => {
+    setCreatingUser(false); // Close the modal
+  };
+
   return (
     <div className='bg-[#0E1959] h-screen flex items-start justify-center'>
       <div className='overflow-x-auto w-full my-20'>
+        <button className='bg-yellow-500 m-4 hover:bg-yellow-400 text-white font-bold py-2 px-4 rounded mb-4' onClick={handleCreate}>Create User</button>
         <table className='w-full'>
           <thead>
             <tr className='bg-gray-800 text-white'>
@@ -103,9 +128,14 @@ const ManageUsers = () => {
           onCancel={handleCancelEdit}
         />
       )}
+      {creatingUser && (
+        <CreateUserModal
+          onSave={handleSaveCreate}
+          onCancel={handleCancelCreate}
+        />
+      )}
     </div>
   );
 };
 
 export default ManageUsers;
-

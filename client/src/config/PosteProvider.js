@@ -5,6 +5,7 @@ const PostContext = createContext();
 
 const PosteProvider = ({ children }) => {
     const [user, setUser] = useState()
+    const [colisId, setcolisId] = useState()
 
     const navigate = useNavigate();
 
@@ -17,7 +18,9 @@ const PosteProvider = ({ children }) => {
         <PostContext.Provider
             value={{
                 user,
-                setUser
+                setUser,
+                colisId,
+                setcolisId,
             }}
         >
             {children}
