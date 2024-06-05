@@ -7,22 +7,21 @@ const ScheduleCollections = () => {
   const [parcels, setParcels] = useState([]);
   const [editingParcelId, setEditingParcelId] = useState(null);
 
-  useEffect(() => {
-    const getColis = async () => {
-      if (user && user.user && user.user.id && user.token) {
-        try {
-          const { data } = await axios.get(`http://localhost:8090/api/Colis/user/${user.user.id}`, {
-            headers: {
-              'Authorization': `Bearer ${user.token}`
-            }
-          });
-          setParcels(data);
-        } catch (err) {
-          // Handle error
-        }
+  const getColis = async () => {
+    if (user && user.user && user.user.id && user.token) {
+      try {
+        const { data } = await axios.get(`http://localhost:8090/api/Colis`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
+        setParcels(data);
+      } catch (err) {
+        // Handle error
       }
-    };
-
+    }
+  };
+  useEffect(() => {
     if (user) {
       getColis();
     }
@@ -35,17 +34,36 @@ const ScheduleCollections = () => {
   const handleStatusChange = async (e, parcelId) => {
     const newStatus = e.target.value;
     try {
-      await axios.put(`http://localhost:8090/api/Colis/${parcelId}`, { status: newStatus });
-      const updatedParcels = parcels.map((parcel) =>
-        parcel.id === parcelId ? { ...parcel, status: newStatus } : parcel
-      );
-      setParcels(updatedParcels);
+      const parcelToUpdate = parcels.find((parcel) => parcel.id === parcelId);
+      if (!parcelToUpdate) return;
+  
+      const updatedParcel = {
+        id: parcelToUpdate.id,
+        contenu: parcelToUpdate.contenu,
+        poids: parcelToUpdate.poids,
+        taille: parcelToUpdate.taille,
+        adresseDestination: parcelToUpdate.adresseDestination,
+        status: newStatus,
+      };
+      console.log(updatedParcel)
+  
+      await axios.put(`http://localhost:8090/api/Colis/${parcelId}`, updatedParcel, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+  
+      getColis()
     } catch (err) {
       // Handle error
     } finally {
       setEditingParcelId(null);
     }
   };
+  
+  
+  
+  
 
   return (
     <div className='min-h-screen bg-[#0E1959]'>
